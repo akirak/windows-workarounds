@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# A wrapper for running a command in a proper environment inside WSL
+
+# Exclude annoying PATH items that have space inside them
+IFS=:
+newpath=""
+for dir in $PATH; do
+    if [[ "$dir" == /mnt/c/@(Windows|Program Files|Program Files \(x86\))/* ]]; then
+        continue
+    fi
+    if [[ -z "$newpath" ]]; then
+        newpath="$dir"
+    else
+        newpath="$newpath:$dir"
+    fi
+done
+
+PATH="$newpath" exec "$@"
